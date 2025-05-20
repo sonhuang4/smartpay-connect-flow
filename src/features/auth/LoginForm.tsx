@@ -11,10 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -30,6 +32,7 @@ const LoginForm = () => {
     defaultValues: {
       email: '',
       password: '',
+      rememberMe: false,
     },
   });
 
@@ -55,10 +58,10 @@ const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full backdrop-blur-sm bg-[#1a1a1a]/80 border border-gray-800 shadow-lg hover:shadow-cyan-500/5 transition-all duration-300">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>Enter your credentials to access your account</CardDescription>
+        <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">Sign In</CardTitle>
+        <CardDescription className="text-center text-gray-400">Enter your credentials to access your account</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -68,9 +71,13 @@ const LoginForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-gray-300">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="you@example.com" {...field} />
+                    <Input 
+                      placeholder="you@example.com" 
+                      {...field} 
+                      className="bg-[#2a2a2a] border-gray-700 focus:border-cyan-500 transition-all duration-200 text-white"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,19 +88,20 @@ const LoginForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-gray-300">Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
                         {...field}
+                        className="bg-[#2a2a2a] border-gray-700 focus:border-cyan-500 transition-all duration-200 text-white pr-10"
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-full px-3 py-2 text-gray-400 hover:text-white"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -108,14 +116,36 @@ const LoginForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="data-[state=checked]:bg-cyan-500 data-[state=checked]:border-cyan-500"
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-sm text-gray-400">Remember me</FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 hover:scale-[1.02]" 
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <span className="flex items-center">
                   <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-b-transparent"></span>
-                  Logging in...
+                  Signing in...
                 </span>
               ) : (
-                <span className="flex items-center">
+                <span className="flex items-center justify-center">
                   <LogIn className="mr-2 h-4 w-4" /> Sign In
                 </span>
               )}
@@ -123,21 +153,27 @@ const LoginForm = () => {
           </form>
         </Form>
         
-        <div className="mt-4 text-center text-sm">
-          <p>
-            Demo accounts:
+        <div className="mt-6 p-4 bg-[#222222] rounded-md border border-gray-800">
+          <p className="text-sm text-center text-gray-300 font-medium">
+            Demo accounts
           </p>
-          <p className="text-muted-foreground text-xs mt-1">
-            Admin: john@example.com / password123<br />
-            User: jane@example.com / password123
-          </p>
+          <div className="mt-2 text-xs text-gray-400 space-y-1">
+            <p className="flex justify-between">
+              <span>Admin:</span>
+              <span className="font-mono">john@example.com / password123</span>
+            </p>
+            <p className="flex justify-between">
+              <span>User:</span>
+              <span className="font-mono">jane@example.com / password123</span>
+            </p>
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center">
-        <p className="text-sm text-muted-foreground">
+      <CardFooter className="flex justify-center border-t border-gray-800 pt-4">
+        <p className="text-sm text-gray-400">
           Don't have an account?{" "}
-          <Link to="/register" className="text-primary underline hover:text-primary/80">
-            Register
+          <Link to="/register" className="text-cyan-500 hover:text-cyan-400 transition-colors">
+            Create account
           </Link>
         </p>
       </CardFooter>
