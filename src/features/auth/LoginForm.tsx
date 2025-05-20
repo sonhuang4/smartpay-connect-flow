@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { z } from 'zod';
@@ -136,7 +135,7 @@ const LoginForm = () => {
             />
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 hover:scale-[1.02]" 
+              className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 hover:scale-[1.02] border-none" 
               disabled={isLoading}
             >
               {isLoading ? (
